@@ -1,14 +1,17 @@
 version: '2'
 services:
   nginx-proxy:
-    image: jwilder/nginx-proxy
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: nginx-proxy
     ports:
-      - "80:80"
+      - "443:443"
     volumes:
-      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - "/var/run/docker.sock:/tmp/docker.sock:ro"
+      - "../jupyterhub-deploy-docker-localhost/secrets:/etc/nginx/certs"
 
-  whoami:
-    image: jwilder/whoami
-    environment:
-      - VIRTUAL_HOST=whoami.local
+networks:
+  default:
+    external:
+      name: jupyterhub-network
